@@ -1,5 +1,7 @@
 -- ftd.code code-page:
 caption file-name:
 body content:
+string lang:
+lang: $lang
 
 $content
