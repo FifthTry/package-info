@@ -1,4 +1,5 @@
 -- ftd.text markdown-page:
 caption file-name:
 body content:
-text: $content
+
+$content
