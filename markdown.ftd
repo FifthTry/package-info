@@ -1,5 +1,6 @@
 -- ftd.text markdown-page:
 caption file-name:
-body content:
+optional body content:
+if: $content is not null
 
 $content
