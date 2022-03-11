@@ -51,10 +51,8 @@ width: fill
 
 --- ftd.text: $title
 region: title
-size: 30
 color: #162f78
 style: bold
-font: apple-system
 align: center
 link: $fpm.home-url
 
@@ -86,11 +84,9 @@ region: h0
 --- ftd.text:
 text: $title
 region: title
-size: 40
 color: black
 style: bold
 padding-bottom: 24
-font: apple-system
 
 --- container: ftd.main
 
@@ -103,12 +99,10 @@ body: $body
 -- ftd.text markdown:
 body body:
 text: $body
-size: 19
 line-height: 30
 color: #4d4d4d
 padding-bottom: 34
 padding-top: 50
-font: apple-system
 
 
 -- ftd.row print:
