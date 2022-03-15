@@ -132,10 +132,11 @@ padding-top: 50
 
 -- ftd.row print:
 caption file:
+ftd.colors colors:
 ftd.ui status:
 width: fill
 border-bottom: 1
-border-color: white
+border-color: $colors.action-primary
 padding: 10
 
 --- ftd.text: $file
@@ -147,14 +148,15 @@ padding: 5
 
 
 -- ftd.column files-status:
-background-color: #f3f3f3
+ftd.colors colors:
+background-color: $colors.primary-action
 width: fill
 max-width: 800
 
 --- ftd.row:
 width: fill
-background-color: black
-color: white
+background-color: $colors.primary-action
+color: $colors.on-primary-action
 padding: 10
 border-top-radius: 5
 
