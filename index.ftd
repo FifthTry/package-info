@@ -2,6 +2,16 @@
 -- import: fpm-lib
 
 
+
+
+
+
+
+
+
+
+
+
 -- ftd.column package-info-page:
 width: fill
 padding: 40
@@ -17,6 +27,14 @@ value: $fpm.language
 
 --- fpm-lib.key-value-without-default: Zip:
 value: $fpm.package-zip
+
+
+
+
+
+
+
+
 
 
 
@@ -39,6 +57,17 @@ value: $fpm.number-of-documents
 default: Not known
 
 --- files-status:
+ftd.colors colors: $fpm.design.colors.brand
+colors: $colors
+
+
+
+
+
+
+
+
+
 
 
 
@@ -62,6 +91,15 @@ position: center
 
 
 
+
+
+
+
+
+
+
+
+
 -- ftd.column title:
 caption title:
 optional body body:
@@ -75,18 +113,19 @@ width: fill
 
 --- ftd.text: $title
 region: title
-color: #162f78
-style: bold
+ftd.colors colors:
+color: $colors.secondary-action
 align: center
 link: $fpm.home-url
 
 --- ftd.text: $fpm.language
 if: $fpm.language is not null
 border-radius: 10
-background-color: #f3f3f3
+ftd.colors colors:
+color: $colors.secondary-action
+background-color: $colors.secondary-action
 padding-vertical: 5
 padding-horizontal: 20
-color: #E38686
 align: center
 
 --- container: ftd.main
@@ -95,7 +134,19 @@ align: center
 
 --- markdown:
 if: $body is not null
+ftd.colors colors: $fpm.design.colors.brand
+colors: $colors
 body: $body
+
+
+
+
+
+
+
+
+
+
 
 
 -- ftd.column h0:
@@ -108,25 +159,45 @@ region: h0
 --- ftd.text:
 text: $title
 region: title
-color: black
-style: bold
+ftd.colors colors:
+color: $colors.secondary-action
 padding-bottom: 24
-font: apple-system
 
 --- container: ftd.main
 
 --- markdown:
 if: $body is not null
+ftd.colors colors: $fpm.design.colors.brand
+colors: $colors
 body: $body
+
+
+
+
+
+
+
+
+
 
 
 
 -- ftd.text markdown:
 body body:
+ftd.colors colors:
+color: $colors.secondary-action
 text: $body
-color: #4d4d4d
 padding-bottom: 34
 padding-top: 50
+
+
+
+
+
+
+
+
+
 
 
 
@@ -136,7 +207,7 @@ ftd.colors colors:
 ftd.ui status:
 width: fill
 border-bottom: 1
-border-color: $colors.action-primary
+border-color: $colors.primary-action
 padding: 10
 
 --- ftd.text: $file
@@ -144,6 +215,15 @@ width: percent 50
 padding: 5
 
 --- status:
+
+
+
+
+
+
+
+
+
 
 
 
@@ -173,33 +253,40 @@ padding: 5
 --- print: $obj
 $loop$: $fpm.missing-files as $obj
 status: ftd.text: $fpm.i18n.missing
+ftd.colors colors: $fpm.design.colors.brand
+colors: $colors
 > padding: 5
-> color: #eb8489
-> background-color: #fdebeb
+> color: $colors.primary-action
+> background-color: $colors.primary-action
 > border-radius: 10
 
 --- print: $obj
 $loop$: $fpm.never-marked-files as $obj
 status: ftd.text: $fpm.i18n.never-marked
+ftd.colors colors: $fpm.design.colors.brand
+colors: $colors
 > padding: 5
 > color: #4e4ead
 > background-color: #e0dff9
 > border-radius: 10
 
-
 --- print: $obj
 $loop$: $fpm.outdated-files as $obj
 status: ftd.text: $fpm.i18n.out-dated
+ftd.colors colors: $fpm.design.colors.brand
+colors: $colors
 > padding: 5
 > color: #f7d06d
 > background-color: #fef7e5
 > border-radius: 10
 
-
 --- print: $obj
 $loop$: $fpm.upto-date-files as $obj
 status: ftd.text: $fpm.i18n.upto-date
+ftd.colors colors: $fpm.design.colors.brand
+colors: $colors
 > padding: 5
 > color: #4da486
 > background-color: #e0efeb
 > border-radius: 10
+
