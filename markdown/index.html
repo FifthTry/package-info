@@ -9,8 +9,20 @@
     "value": "false",
     "dependencies": {}
   },
+  "ftd#desktop-breakpoint": {
+    "value": "1440",
+    "dependencies": {}
+  },
+  "ftd#device": {
+    "value": "\"desktop\"",
+    "dependencies": {}
+  },
   "ftd#follow-system-dark-mode": {
     "value": "true",
+    "dependencies": {}
+  },
+  "ftd#mobile-breakpoint": {
+    "value": "768",
     "dependencies": {}
   },
   "ftd#system-dark-mode": {
@@ -494,6 +506,7 @@ let ftd_utils = {
     },
 
     handle_action: function (id, target, value, data, ftd_external_children) {
+        console.log("handle_action",data[target], value, ftd_external_children);
         data[target].value = value.toString();
         let new_value = data[target].value;
         if (ftd_utils.isJson(data[target].value)) {
@@ -502,6 +515,7 @@ let ftd_utils = {
                 new_value = json[json["$kind$"]];
             }
         }
+        console.log("new_value...", new_value);
 
         let dependencies = data[target].dependencies;
         for (const dependency in dependencies) {
@@ -580,6 +594,7 @@ let ftd_utils = {
                                     new_value["$kind$"] = value;
                                     value = JSON.stringify(new_value);
                                 }
+                                console.log("inside..", parameter, json_dependency.parameters);
                                 ftd_utils.handle_action(id, parameter, value, data, ftd_external_children)
                             }
                         }
@@ -626,10 +641,20 @@ let ftd_utils = {
                             if (parameter === "dependents") {
                                 continue;
                             }
+
                             let important = json_dependency.parameters[parameter].value.important;
-                            ftd_utils.set_style(parameter, `${dependency}:${id}`, new_value, important);
-                            if (!styles_edited.includes(parameter)) {
-                                styles_edited.push(parameter);
+                            if (new_value instanceof Object) {
+                                for (const parameter in new_value) {
+                                    ftd_utils.set_style(parameter, `${dependency}:${id}`, new_value[parameter], important);
+                                    if (!styles_edited.includes(parameter)) {
+                                        styles_edited.push(parameter);
+                                    }
+                                }
+                            } else {
+                                ftd_utils.set_style(parameter, `${dependency}:${id}`, new_value, important);
+                                if (!styles_edited.includes(parameter)) {
+                                    styles_edited.push(parameter);
+                                }
                             }
                         }
                     } else if (ftd_utils.is_equal_condition(data[target].value, json_dependency.condition)) {
@@ -936,7 +961,7 @@ window.ftd = (function () {
             return;
         }
 
-        ftd_utils.handle_action(id, variable, value, data);
+        ftd_utils.handle_action(id, variable, value, data, ftd_external_children);
     }
 
     exports.get_value = function (id, variable) {
@@ -962,8 +987,9 @@ window.ftd = (function () {
     }
 
     exports.init = function (id, data, external_children) {
-        ftd_data[id] = data;
-        ftd_external_children[id] = external_children;
+        ftd_data[id] = JSON.parse(document.getElementById(data).innerText);
+        ftd_external_children[id] = JSON.parse(document.getElementById(external_children).innerText);
+        window.ftd.post_init();
     }
 
     exports.set_bool_for_all = function (variable, value) {
@@ -993,7 +1019,7 @@ function console_print(id, data) {
     console.log(data);
 }
 
-(function () {
+window.ftd.post_init = function () {
     const DARK_MODE = "ftd#dark-mode";
     const SYSTEM_DARK_MODE = "ftd#system-dark-mode";
     const FOLLOW_SYSTEM_DARK_MODE = "ftd#follow-system-dark-mode";
@@ -1003,6 +1029,56 @@ function console_print(id, data) {
     const COOKIE_DARK_MODE = "dark";
     const COOKIE_LIGHT_MODE = "light";
     const DARK_MODE_CLASS = "fpm-dark";
+    const FTD_DEVICE = "ftd#device";
+    const FTD_MOBILE_BREAKPOINT = "ftd#mobile-breakpoint";
+    const FTD_DESKTOP_BREAKPOINT = "ftd#desktop-breakpoint";
+
+    let last_device;
+
+    function initialise_device() {
+        last_device = get_device();
+        console.log("last_device", last_device);
+        window.ftd.set_bool_for_all(FTD_DEVICE, last_device);
+    }
+
+    window.onresize = function () {
+        let current = get_device();
+        if (current === last_device) {
+            return;
+        }
+
+        window.ftd.set_string_for_all(FTD_DEVICE, current);
+        last_device = current;
+        console.log("last_device", last_device);
+    }
+
+    function get_device() {
+        // not at all sure about this functions logic.
+        let width = window.innerWidth;
+
+        // in future we may want to have more than one break points, and then
+        // we may also want the theme builders to decide where the breakpoints
+        // should go. we should be able to fetch fpm variables here, or maybe
+        // simply pass the width, user agent etc to fpm and let people put the
+        // checks on width user agent etc, but it would be good if we can
+        // standardize few breakpoints. or maybe we should do both, some
+        // standard breakpoints and pass the raw data.
+
+        // we would then rename this function to detect_device() which will
+        // return one of "desktop", "tablet", "mobile". and also maybe have
+        // another function detect_orientation(), "landscape" and "portrait" etc,
+        // and instead of setting `fpm#mobile: boolean` we set `fpm-ui#device`
+        // and `fpm#view-port-orientation` etc.
+        let mobile_breakpoint = window.ftd.get_value("main", FTD_MOBILE_BREAKPOINT);
+        let desktop_breakpoint = window.ftd.get_value("main", FTD_DESKTOP_BREAKPOINT);
+        if (width <= mobile_breakpoint) {
+            return "mobile";
+        }
+        if (width > desktop_breakpoint) {
+            return "xxl";
+        }
+        return "desktop";
+    }
 
     window.enable_dark_mode = function () {
         // TODO: coalesce the two set_bool-s into one so there is only one DOM
@@ -1089,7 +1165,8 @@ function console_print(id, data) {
         );
     }
     initialise_dark_mode();
-})();
+    initialise_device();
+};
 
             window.ftd.init(
                 "main",
