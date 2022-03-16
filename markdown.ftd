@@ -2,6 +2,5 @@
 caption file-name:
 optional body content:
 if: $content is not null
-ftd.colors colors: $fpm.design.colors.brand
 
 $content
